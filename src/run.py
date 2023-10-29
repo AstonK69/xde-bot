@@ -15,8 +15,6 @@ import discord
 from discord.ext import commands
 
 intents = discord.Intents.default()
-intents.members = True
-intents.message_content = True
 
 prefix = "."
 activity = discord.Activity(type=discord.ActivityType.watching, name="Seven win all the time")
@@ -24,6 +22,7 @@ bot = commands.Bot(command_prefix=prefix, case_insensitive=True, activity=activi
 bot.remove_command("help")
 
 
+print("=======================")
 def loadCog(path, folder=True):
     if folder:
         for filename in os.listdir(f'{load.path}/cogs/{path}'):
@@ -38,5 +37,6 @@ def loadCog(path, folder=True):
 if __name__ == "__main__":
     loadCog("events")
     loadCog("commands")
+    print("=======================")
 
     bot.run(load.token)

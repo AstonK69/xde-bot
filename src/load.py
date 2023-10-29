@@ -15,7 +15,7 @@ cooldown = config.get("cooldown")
 
 class Colours:
     standard = 0xc40e1a
-    red = 0xff0000
+    standard = 0xff0000
     blue = 0x0000ff
     green = 0x77dd77
     yellow = 0xeb9226

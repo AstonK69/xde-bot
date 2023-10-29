@@ -8,6 +8,7 @@ class on_ready(commands.Cog):
     @commands.Cog.listener()
     async def on_ready(self):
         print("XDE Bot up and running!")
+        print("=======================")
 
 
 def setup(bot):

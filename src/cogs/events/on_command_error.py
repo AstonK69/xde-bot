@@ -8,37 +8,44 @@ class on_command_error(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.Cog.listener()
-    async def on_command_error(self, ctx: commands.Context, error: commands.CommandError):
+    intents = discord.Intents.default()
+
+    prefix = "."
+    activity = discord.Activity(type=discord.ActivityType.watching, name="Seven win all the time")
+    bot = commands.Bot(command_prefix=prefix, case_insensitive=True, activity=activity, owner_id=[760602301790158868],
+                       intents=intents)
+
+    @bot.event
+    async def on_command_error(self, ctx: discord.ApplicationContext, error: discord.DiscordException):
         if isinstance(error, commands.CommandOnCooldown):
             embed = discord.Embed(
                 description=f"That command is on cooldown please try again in a few seconds!",
-                colour=Colours.red)
+                colour=Colours.standard)
         elif isinstance(error, CommandNotFound):
             command = str(ctx.message.content).split(" ")[0]
             embed = discord.Embed(
                 description=f"Command `{command}` not found",
-                colour=Colours.red)
+                colour=Colours.standard)
         elif isinstance(error, commands.MissingRequiredArgument):
             embed = discord.Embed(
                 description=f"Missing required argument for that command!",
-                colour=Colours.red)
+                colour=Colours.standard)
         elif isinstance(error, commands.MissingPermissions):
             embed = discord.Embed(
                 description=f"You are missing the permissions to do this!",
-                colour=Colours.red)
+                colour=Colours.standard)
         elif isinstance(error, commands.BotMissingPermissions):
             embed = discord.Embed(
                 description=f"I do not have permission to do this!",
-                colour=Colours.red)
+                colour=Colours.standard)
         else:
             error_ = str(error)[29:] if str(error).lower().startswith(
                 "command") else str(error)
             embed = discord.Embed(
                 description=f"{str(error_).capitalize()}",
-                colour=Colours.red)
+                colour=Colours.standard)
 
-        await ctx.reply(embed=embed)
+        await ctx.respond(embed=embed)
 
 
 def setup(bot):
