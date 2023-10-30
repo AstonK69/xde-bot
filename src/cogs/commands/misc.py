@@ -5,6 +5,12 @@ from discord.ext.commands import cooldown, BucketType
 from discord.ext.commands.core import has_permissions
 from src.load import Colours
 
+activity_types = ["Playing", "Streaming", "Watching", "Listening"]
+a_dict = {"Playing": discord.ActivityType.playing,
+          "Streaming": discord.ActivityType.streaming,
+          "Watching": discord.ActivityType.watching,
+          "Listening": discord.ActivityType.listening}
+
 
 class Misc(commands.Cog):
     def __init__(self, bot):
@@ -32,6 +38,16 @@ class Misc(commands.Cog):
         embed.set_footer(text=f"Xtreme Dutch Elite ・ 2023 | Created by Aston",
                          icon_url='https://cdn.discordapp.com/attachments/940889123437309972/1168232344256258058/smaller_xde_logo.png?ex=65510427&is=653e8f27&hm=5f07726900ba157438dc6da3be2bcd10db6e5e3daa9825e4814dd75ff0fa677d&')
         await ctx.respond(embed=embed)
+
+    @cooldown(1, 3, BucketType.user)
+    @has_permissions(manage_nicknames=True)
+    @slash_command(name="presence", description="Changes status and activity of bot")
+    @discord.option("activity_type", description="Playing, Streaming, Listening, Watching [message]", required=False,
+                    choices=activity_types)
+    @discord.option("activity_content", description="Changes the status message on the bots profile", required=False)
+    async def presence(self, ctx, activity_type: str, activity_content: str):
+        await self.bot.change_presence(activity=discord.Activity(type=a_dict[activity_type], name=activity_content))
+        await ctx.respond(f"Changed presence to {activity_content}")
 
 
 def setup(bot):

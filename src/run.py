@@ -1,5 +1,5 @@
 """
-Skyline Discord Bot
+XDE Discord Bot
 ~~~~~~~~~~~~~~~~~~~~~
 
 © 2023 AstonK69
@@ -18,11 +18,10 @@ intents = discord.Intents.default()
 
 prefix = "."
 activity = discord.Activity(type=discord.ActivityType.watching, name="Seven win all the time")
-bot = commands.Bot(command_prefix=prefix, case_insensitive=True, activity=activity, owner_id=[760602301790158868], intents=intents)
+bot = commands.Bot(command_prefix=prefix, case_insensitive=True, activity=activity, owner_id=[760602301790158868], intents=intents, status=discord.Status.do_not_disturb)
 bot.remove_command("help")
 
 
-print("=======================")
 def loadCog(path, folder=True):
     if folder:
         for filename in os.listdir(f'{load.path}/cogs/{path}'):
@@ -37,6 +36,5 @@ def loadCog(path, folder=True):
 if __name__ == "__main__":
     loadCog("events")
     loadCog("commands")
-    print("=======================")
 
     bot.run(load.token)

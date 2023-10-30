@@ -3,12 +3,27 @@ from discord.ext import commands
 import discord
 from discord.ext.commands.core import has_permissions
 from discord.commands import slash_command
-from discord.ui import Button, View
+import os
+from src import load
+from src.run import bot, loadCog
 from src.load import Colours
+
+
+def reloadCog(path, folder=True):
+    if folder:
+        for filename in os.listdir(f'{load.path}/cogs/{path}'):
+            if filename.endswith('.py'):
+                bot.reload_extension(f'cogs.{path}.{filename[:-3]}')
+                print(f'{filename[:-3]} cog reloaded')
+    else:
+        bot.reload_extension(f'cogs.{path}')
+        print(f"{path} reloaded")
+
 
 class Moderation(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
+
 
     @has_permissions(ban_members=True)
     @slash_command(description="Bans people")
@@ -73,7 +88,8 @@ class Moderation(commands.Cog):
     @discord.option("hours", description="How many hours for?", min_value=1, max_value=24, default=2)
     @discord.option("reason", description="What is the reason", default="Not specified")
     async def timeout(self, ctx, member: discord.Member, hours: int, reason: str):
-        embed = discord.Embed(title=f"{member.name} Timed out", description=f"Reason: {reason}", colour=Colours.standard)
+        embed = discord.Embed(title=f"{member.name} Timed out", description=f"Reason: {reason}",
+                              colour=Colours.standard)
         embed.add_field(name="Timed out for:", value=f"{hours} hours")
         embed.add_field(name="Timed out by:", value=ctx.author.name)
         embed.set_footer(text=f"Xtreme Dutch Elite ・ 2023 | Created by Aston")
@@ -96,6 +112,21 @@ class Moderation(commands.Cog):
             await ctx.respond('Something went wrong!')
         else:
             await ctx.respond(f'I removed the timeout on {member.mention}')
+
+    @has_permissions(ban_members=True)
+    @slash_command(description="Reloads cog of bot")
+    @discord.option("cog", description="Provide the name of the cog")
+    async def refresh_cog(self, ctx, cog: str):
+        try:
+            try:
+                loadCog(cog)
+                await ctx.respond(f"{cog} successfully reloaded!")
+            except:
+                reloadCog(cog)
+                await ctx.respond(f"{cog} successfully reloaded!")
+        except Exception as error:
+            await ctx.respond(f'Something went wrong {error}')
+
 
 def setup(bot):
     bot.add_cog(Moderation(bot))

@@ -6,6 +6,7 @@ import pyfiglet
 from random import randint
 from src.load import Colours
 
+
 class Fun(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
@@ -24,7 +25,8 @@ class Fun(commands.Cog):
     async def avatar(self, ctx, user: discord.Member):
         pfp = user.display_avatar
 
-        embed = discord.Embed(title=f"{user.name}'s Avatar", description=f"[Download]({pfp.url})", color=Colours.standard)
+        embed = discord.Embed(title=f"{user.name}'s Avatar", description=f"[Download]({pfp.url})",
+                              color=Colours.standard)
         embed.set_image(url=pfp.url)
         embed.set_footer(text=f"Xtreme Dutch Elite ・ 2023 | Created by Aston")
 
@@ -77,8 +79,23 @@ Roles:
 {roles}
 """, color=Colours.standard)
         embed.set_thumbnail(url=str(user.display_avatar))
-        embed.set_footer(text=f"Xtreme Dutch Elite ・ 2023 | Created by Aston", icon_url='https://cdn.discordapp.com/attachments/940889123437309972/1168232344256258058/smaller_xde_logo.png?ex=65510427&is=653e8f27&hm=5f07726900ba157438dc6da3be2bcd10db6e5e3daa9825e4814dd75ff0fa677d&')
+        embed.set_footer(text=f"Xtreme Dutch Elite ・ 2023 | Created by Aston",
+                         icon_url='https://cdn.discordapp.com/attachments/940889123437309972/1168232344256258058/smaller_xde_logo.png?ex=65510427&is=653e8f27&hm=5f07726900ba157438dc6da3be2bcd10db6e5e3daa9825e4814dd75ff0fa677d&')
         await ctx.respond(embed=embed)
+
+    @cooldown(1, 3, BucketType.user)
+    @slash_command(description="Evaluates text provided")
+    @discord.option("expression", description="Enter your expression to evaluate")
+    async def evaluate(self, ctx, expression: str):
+        try:
+            out = str(eval(expression))
+            embed = discord.Embed(colour=Colours.standard)
+            embed.add_field(name="Input", value=expression, inline=False)
+            embed.add_field(name="Output", value=out, inline=False)
+            await ctx.respond(embed=embed)
+        except Exception as e:
+            await ctx.respond(e)
+
 
 def setup(bot):
     bot.add_cog(Fun(bot))
