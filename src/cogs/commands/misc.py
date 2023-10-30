@@ -6,8 +6,8 @@ from discord.ext.commands.core import has_permissions
 from src.load import Colours
 
 activity_types = ["Playing", "Streaming", "Watching", "Listening"]
-a_dict = {"Playing": discord.ActivityType.playing,
-          "Streaming": discord.ActivityType.streaming,
+a_dict = {"Playing": 0,
+          "Streaming": 1,
           "Watching": discord.ActivityType.watching,
           "Listening": discord.ActivityType.listening}
 
@@ -42,12 +42,20 @@ class Misc(commands.Cog):
     @cooldown(1, 3, BucketType.user)
     @has_permissions(manage_nicknames=True)
     @slash_command(name="presence", description="Changes status and activity of bot")
-    @discord.option("activity_type", description="Playing, Streaming, Listening, Watching [message]", required=False,
-                    choices=activity_types)
+    @discord.option("activity_type", description="Playing, Streaming, Listening, Watching [message]", required=False, choices=activity_types)
     @discord.option("activity_content", description="Changes the status message on the bots profile", required=False)
     async def presence(self, ctx, activity_type: str, activity_content: str):
-        await self.bot.change_presence(activity=discord.Activity(type=a_dict[activity_type], name=activity_content))
-        await ctx.respond(f"Changed presence to {activity_content}")
+        try:
+            if a_dict[activity_type] == 0:
+                await self.bot.change_presence(activity=discord.Game(name=activity_content))
+            elif a_dict[activity_type] == 1:
+                await self.bot.change_presence(activity=discord.Streaming(name=activity_content))
+            else:
+                await self.bot.change_presence(activity=discord.Activity(type=a_dict[activity_type], name=activity_content))
+            await ctx.respond(f"Changed presence to {activity_type} {activity_content}")
+        except Exception as e:
+            await ctx.respond(e)
+
 
 
 def setup(bot):
