@@ -27,7 +27,8 @@ class Misc(commands.Cog):
     @cooldown(1, 3, BucketType.user)
     @slash_command(name="say", description="Repeats a message", guild_ids=[1140717989780521020])
     async def say(self, ctx, text: str):
-        await ctx.respond(text)
+        await ctx.respond('Message sent, you can now hide this message', ephemeral=True)
+        await ctx.send(text)
 
     @cooldown(1, 3, BucketType.user)
     @slash_command(description="Repeats a message in an embed")
@@ -37,7 +38,8 @@ class Misc(commands.Cog):
         embed = discord.Embed(title=title, description=message, colour=Colours.standard)
         embed.set_footer(text=f"Xtreme Dutch Elite ・ 2023 | Created by Aston",
                          icon_url='https://cdn.discordapp.com/attachments/940889123437309972/1168232344256258058/smaller_xde_logo.png?ex=65510427&is=653e8f27&hm=5f07726900ba157438dc6da3be2bcd10db6e5e3daa9825e4814dd75ff0fa677d&')
-        await ctx.respond(embed=embed)
+        await ctx.respond('Embed sent, you can now hide this message', ephemeral=True)
+        await ctx.send(embed=embed)
 
     @cooldown(1, 3, BucketType.user)
     @has_permissions(manage_nicknames=True)
@@ -53,6 +55,23 @@ class Misc(commands.Cog):
             else:
                 await self.bot.change_presence(activity=discord.Activity(type=a_dict[activity_type], name=activity_content))
             await ctx.respond(f"Changed presence to {activity_type} {activity_content}")
+        except Exception as e:
+            await ctx.respond(e)
+
+    @cooldown(1, 3, BucketType.user)
+    @has_permissions(manage_nicknames=True)
+    @slash_command(name="nickname", description="Changes peoples nicknames")
+    @discord.option("user", description="Select the user to change the name of", input_type=discord.Member)
+    @discord.option("name", description="What nickname do you want to give them")
+    async def nickname(self, ctx, user: discord.Member, name=""):
+        try:
+            await user.edit(nick=name)
+            if name == "":
+                output = f"Changed {user.name}'s nickname back to normal"
+            else:
+                output = f"Changed {user.name}'s nickname to {name}"
+
+            await ctx.respond(output)
         except Exception as e:
             await ctx.respond(e)
 

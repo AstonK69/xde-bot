@@ -3,5 +3,3 @@ then after a race you can input the results and it will keep a running total of 
 - add to league command
 - look at adding music commands/make it play sound files in vc
 - make proper error messages
-- /nick command to change peoples nicknames
-- make say not a response and just a send message command?

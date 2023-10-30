@@ -15,7 +15,7 @@ class on_command_error(commands.Cog):
     bot = commands.Bot(command_prefix=prefix, case_insensitive=True, activity=activity, owner_id=[760602301790158868],
                        intents=intents)
 
-    @bot.event
+    @commands.Cog.listener()
     async def on_command_error(self, ctx: discord.ApplicationContext, error: discord.DiscordException):
         if isinstance(error, commands.CommandOnCooldown):
             embed = discord.Embed(

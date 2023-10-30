@@ -94,7 +94,7 @@ Roles:
             embed.add_field(name="Output", value=out, inline=False)
             await ctx.respond(embed=embed)
         except Exception as e:
-            await ctx.respond(e)
+            await ctx.respond(f"{e}, try adding multiplication (*) signs before any brackets")
 
 
 def setup(bot):
