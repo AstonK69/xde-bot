@@ -1,15 +1,19 @@
 from discord.ext import commands
 import discord
 from src.load import Colours
-from src.run import bot
+
 
 class on_message_edit(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
+    bot = commands.Bot(intents=discord.Intents.all())
+
+    @bot.event
     @commands.Cog.listener()
     async def on_message_edit(self, before: discord.Message, after: discord.Message):
-        embed = discord.Embed(colour=Colours.standard, title="Message edited", description=f"{before.author.mention} edited the following:")
+        embed = discord.Embed(colour=Colours.standard, title="Message edited",
+                              description=f"{before.author.mention} edited the following:")
         embed.add_field(name="Before", value=before.content, inline=False)
         embed.add_field(name="After", value=after.content, inline=False)
         print(before.content)

@@ -8,13 +8,9 @@ class on_command_error(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    intents = discord.Intents.default()
+    bot = commands.Bot(intents=discord.Intents.all())
 
-    prefix = "."
-    activity = discord.Activity(type=discord.ActivityType.watching, name="Seven win all the time")
-    bot = commands.Bot(command_prefix=prefix, case_insensitive=True, activity=activity, owner_id=[760602301790158868],
-                       intents=intents)
-
+    @bot.event
     @commands.Cog.listener()
     async def on_command_error(self, ctx: discord.ApplicationContext, error: discord.DiscordException):
         if isinstance(error, commands.CommandOnCooldown):

@@ -14,13 +14,20 @@ import load
 import discord
 from discord.ext import commands
 
-intents = discord.Intents.default()
+intents = discord.Intents.all()
 
 prefix = "."
 activity = discord.Activity(type=discord.ActivityType.watching, name="Seven win all the time")
 bot = commands.Bot(command_prefix=prefix, case_insensitive=True, activity=activity, owner_id=[760602301790158868], intents=intents, status=discord.Status.do_not_disturb)
 bot.remove_command("help")
 
+# @bot.event
+# async def on_message_edit(before: discord.Message, after: discord.Message):
+#     msg = (
+#         f"**{before.author}** edited their message:\n{before.content} ->"
+#         f" {after.content}"
+#     )
+#     await before.channel.send(msg)
 
 def loadCog(path, folder=True):
     if folder:
