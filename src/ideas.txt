@@ -1,5 +1,5 @@
 - /points command, create a new league, then tell it how many points each place has,
 then after a race you can input the results and it will keep a running total of points thats everyone has, maybe generate it into an excel or image
-- add to league command
 - look at adding music commands/make it play sound files in vc
 - make proper error messages
+- command for each round which displays the track thats coming up with info about it, time of event etc
