@@ -108,16 +108,16 @@ gt4_embed.add_field(name="Calendar", value="here are all the different tracks on
                       inline=False)
 gt4_embed.add_field(name="", value=""">>> **Round 1**
 Barcelona
-Laps: `TBA`""")
+Laps: 16""")
 gt4_embed.add_field(name="", value=""">>> **Round 2**
 Palmadera
-Laps: `TBA`""")
+Laps: 20""")
 gt4_embed.add_field(name="", value=""">>> **Round 3**
 Brands Hatch
-Laps: `TBA`""")
+Laps: 20""")
 gt4_embed.add_field(name="", value=""">>> **Round 4**
 Sebring
-Laps: `TBA`""")
+Laps: 13""")
 gt4_embed.add_field(name="", value=""">>> **Round 5**
 Monza
 Laps: `TBA`""")

@@ -127,6 +127,15 @@ class Moderation(commands.Cog):
         except Exception as error:
             await ctx.respond(f'Something went wrong {error}')
 
+    @has_permissions(manage_channels=True)
+    @slash_command(description="Creates new section of channels for a new league")
+    @discord.option("category name", description="Provide the name of the league")
+    @discord.option("channel prefix", description="Provide the shortened version of the league name that should be on the front of channel names (ie. f1_05)")
+    async def create_league_category(self, ctx: discord.ApplicationContext, cat_name: str, pre_name: str):
+        await ctx.guild.create_category(cat_name, position=1)
+        await ctx.guild.create_text_channel(f"{pre_name}-announcements", category=ctx.guild.categories[1])
+
+        # edit channel type and make it news, docs pinned in chrome
 
 def setup(bot):
     bot.add_cog(Moderation(bot))
