@@ -120,7 +120,7 @@ Sebring
 Laps: 13""")
 gt4_embed.add_field(name="", value=""">>> **Round 5**
 Monza
-Laps: `TBA`""")
+Laps: 15""")
 gt4_embed.add_field(name="", value=""">>> **Round 6**
 Deep Forest
 Laps: `TBA`""")

@@ -2,3 +2,12 @@
 then after a race you can input the results and it will keep a running total of points thats everyone has, maybe generate it into an excel or image
 - make proper error messages
 - command for each round which displays the track thats coming up with info about it, time of event etc
+
+to do when running the bot on the server:
+- change channel id for sign up command in misc.py line 100
+
+
+make sure python is installed
+git clone https://github.com/AstonK69/xde-bot/tree/main
+pip install -r requirements.txt
+python run.py

@@ -5,8 +5,9 @@ from discord.ext.commands.core import has_permissions
 from discord.commands import slash_command
 import os
 from src import load
-from src.run import bot, loadCog
+from run import bot, loadCog
 from src.load import Colours
+from discord import ChannelType
 
 
 def reloadCog(path, folder=True):
@@ -26,7 +27,7 @@ class Moderation(commands.Cog):
 
 
     @has_permissions(ban_members=True)
-    @slash_command(description="Bans people")
+    @slash_command(name="ban", description="Bans people")
     @discord.option("member", description="Choose a member to ban")
     @discord.option("reason", description="What is the reason", default='Not specified')
     async def ban(self, ctx, member: discord.Member, reason: str):
@@ -43,7 +44,7 @@ class Moderation(commands.Cog):
         else:
             await ctx.respond(embed=embed)
 
-    @slash_command(description="Unbans people")
+    @slash_command(name="unban", description="Unbans people")
     @has_permissions(ban_members=True)
     @discord.option("id", description="Provide the id of the member")
     async def unban(self, ctx, *, id: str):
@@ -55,7 +56,7 @@ class Moderation(commands.Cog):
             await ctx.respond('Something went wrong')
 
     @has_permissions(kick_members=True)
-    @slash_command(description="Kicks people")
+    @slash_command(name="kick", description="Kicks people")
     @discord.option("member", description="Choose a member to kick")
     @discord.option("reason", description="What is the reason", default="Not specified")
     async def kick(self, ctx, member: discord.Member, reason: str):
@@ -73,7 +74,7 @@ class Moderation(commands.Cog):
             await ctx.respond(embed=embed)
 
     @has_permissions(manage_messages=True)
-    @slash_command(description="Deletes messages")
+    @slash_command(name="purge", description="Deletes messages")
     @discord.option("amount", description="Choose an amount", min_value=1, max_value=1001)
     async def purge(self, ctx, amount: int):
         try:
@@ -83,7 +84,7 @@ class Moderation(commands.Cog):
             await ctx.respond("`I do not have permission to do this!`")
 
     @has_permissions(kick_members=True)
-    @slash_command(description="Times out a user")
+    @slash_command(name="timeout", description="Times out a user")
     @discord.option("member", description="Choose a member to timeout")
     @discord.option("hours", description="How many hours for?", min_value=1, max_value=24, default=2)
     @discord.option("reason", description="What is the reason", default="Not specified")
@@ -102,7 +103,7 @@ class Moderation(commands.Cog):
             await ctx.respond(embed=embed)
 
     @has_permissions(kick_members=True)
-    @slash_command(description="Removes the timeout on a user")
+    @slash_command(name="remove_timeout", description="Removes the timeout on a user")
     @discord.option("member", description="Choose a member to timeout")
     @discord.option("reason", description="What is the reason", default="Not specified")
     async def remove_timeout(self, ctx, member: discord.Member, reason: str):
@@ -128,14 +129,68 @@ class Moderation(commands.Cog):
             await ctx.respond(f'Something went wrong {error}')
 
     @has_permissions(manage_channels=True)
-    @slash_command(description="Creates new section of channels for a new league")
+    @slash_command(name="create_league_category", description="Creates new section of channels for a new league")
     @discord.option("category name", description="Provide the name of the league")
     @discord.option("channel prefix", description="Provide the shortened version of the league name that should be on the front of channel names (ie. f1_05)")
     async def create_league_category(self, ctx: discord.ApplicationContext, cat_name: str, pre_name: str):
-        await ctx.guild.create_category(cat_name, position=1)
-        await ctx.guild.create_text_channel(f"{pre_name}-announcements", category=ctx.guild.categories[1])
 
-        # edit channel type and make it news, docs pinned in chrome
+        await ctx.respond("Creating the channels for `" + cat_name + "` league")
+
+        if " " in pre_name:
+            pre_name = pre_name.replace(" ", "-")
+
+        admin_overwrites = {
+            ctx.guild.default_role: discord.PermissionOverwrite(send_messages=False)
+        }
+
+        category = await ctx.guild.create_category(cat_name)
+        ann_channel = await ctx.guild.create_text_channel(f"{pre_name}-announcements", category=category, overwrites=admin_overwrites)
+        await ann_channel.edit(type=ChannelType.news)
+
+        pts_channel = await ctx.guild.create_text_channel(f"{pre_name}-points", category=category, overwrites=admin_overwrites)
+        await pts_channel.edit(type=ChannelType.news)
+
+        info_channel = await ctx.guild.create_text_channel(f"{pre_name}-rules-and-info", category=category, overwrites=admin_overwrites)
+        await info_channel.edit(type=ChannelType.news)
+
+        await ctx.guild.create_text_channel(f"{pre_name}-sign-up", category=category)
+
+        await ctx.guild.create_text_channel(f"{pre_name}-chat", category=category)
+
+        await ctx.guild.create_text_channel(f"{pre_name}-livery-submissions", category=category)
+
+
+
+    @has_permissions(administrator=True)
+    @slash_command(name="delete_category", description="Deletes a category and all the channels it has")
+    @discord.option("category name", description="Select the category you want to delete", input_type=discord.CategoryChannel)
+    @discord.option("are you sure", description="Are you sure you want to delete this category", choices=[True, False])
+    async def delete_category(self, ctx: discord.ApplicationContext, category: discord.CategoryChannel, confirm: bool):
+
+        if confirm:
+            await ctx.respond("Deleting category...", ephemeral=True)
+
+            for i in category.channels:
+                await i.delete(reason=f"Bulk delete command performed by: {ctx.author.name}")
+            await category.delete(reason=f"Bulk delete command performed by: {ctx.author.name}")
+            await ctx.send("Successfully deleted category")
+        else:
+            await ctx.respond("Cancelled", ephemeral=True)
+
+
+    @has_permissions(manage_channels=True)
+    @slash_command(name="hide_category", description="Hides league that is completed and moves it to the bottom")
+    @discord.option("category name", description="Select the category you want to hide", input_type=discord.CategoryChannel)
+    async def hide_category(self, ctx: discord.ApplicationContext, category: discord.CategoryChannel):
+        overwrites = {
+            ctx.guild.default_role: discord.PermissionOverwrite(read_messages=False),
+            ctx.guild.get_role(777534984445231124): discord.PermissionOverwrite(read_messages=True, send_messages=True),
+            ctx.guild.get_role(777523593738977301): discord.PermissionOverwrite(read_messages=True, send_messages=True)
+        }
+
+        await category.edit(overwrites=overwrites)
+        await ctx.respond(f"`{category.name}` hidden successfully")
+
 
 def setup(bot):
     bot.add_cog(Moderation(bot))
