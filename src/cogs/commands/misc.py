@@ -98,7 +98,7 @@ class Misc(commands.Cog):
     @discord.option("team_name", description="What is your team name (optional)", required=False)
     async def sign_up(self, ctx, ac_name: str, steam_id: str, custom_livery: str, team_name = "Not provided"):
 
-        if ctx.channel_id == 1171189350797680700:
+        if ctx.channel_id == 762734160330227732:
             if await self.check_first_message(ctx.author, ctx.channel) is None:
                 if custom_livery == "Yes":
                     await ctx.respond("Please make sure to send your livery in <#1169965404383354910> as soon as possible", ephemeral=True)
