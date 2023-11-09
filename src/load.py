@@ -12,6 +12,8 @@ config = yaml.load(config, Loader=yaml.FullLoader)
 token = config.get("token")
 cooldown = config.get("cooldown")
 
+signed_up_users = []
+
 class Colours:
     standard = 0xff0000
     blue = 0x0000ff

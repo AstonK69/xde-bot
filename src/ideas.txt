@@ -4,10 +4,10 @@ then after a race you can input the results and it will keep a running total of 
 - command for each round which displays the track thats coming up with info about it, time of event etc
 
 to do when running the bot on the server:
-- change channel id for sign up command in misc.py line 100
+- change channel id for sign up command in xde.py line 46
 
 
 make sure python is installed
-git clone https://github.com/AstonK69/xde-bot/tree/main
-pip install -r requirements.txt
-python run.py
+git clone https://github.com/AstonK69/xde-bot/tree/main (with login and pat token), downloads the repository into the directory you are in on command line
+pip install -r requirements.txt, to install all the necessary packages
+python run.py, runs the bot
