@@ -1,7 +1,8 @@
+- update help command with new commands
+
 - /points command, create a new league, then tell it how many points each place has,
 then after a race you can input the results and it will keep a running total of points thats everyone has, maybe generate it into an excel or image
 - make proper error messages
-- command for each round which displays the track thats coming up with info about it, time of event etc
 
 to do when running the bot on the server:
 - change channel id for sign up command in xde.py line 46
@@ -11,3 +12,15 @@ make sure python is installed
 git clone https://github.com/AstonK69/xde-bot/tree/main (with login and pat token), downloads the repository into the directory you are in on command line
 pip install -r requirements.txt, to install all the necessary packages
 python run.py, runs the bot
+
+
+things to change when updating for a new league:
+- create a new table in db
+- create new embed in league_embed.py
+- change the table name in the check_if_in_db function at the top of xde.py
+- change channel id for sign-up channel command xde.py
+- change table names in sign-up command to new league table
+- change league names and table names in add_points command and attendance embed command
+- change what embed to send in /league in information.py
+- make new list for tracks and track maps etc in xde.py between add points and attendance embed
+- change channel id for gt4 sign up in button call back functions

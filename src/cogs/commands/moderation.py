@@ -79,9 +79,9 @@ class Moderation(commands.Cog):
     async def purge(self, ctx, amount: int):
         try:
             await ctx.channel.purge(limit=amount)
-            await ctx.respond(f"Purged {amount} message(s)")
+            await ctx.respond(f"Purged {amount} message(s)", ephemeral=True)
         except:
-            await ctx.respond("`I do not have permission to do this!`")
+            await ctx.respond("`I do not have permission to do this!`", ephemeral=True)
 
     @has_permissions(kick_members=True)
     @slash_command(name="timeout", description="Times out a user")
