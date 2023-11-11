@@ -13,6 +13,6 @@
 > 
 > sqlite3 for databases
 
-- Supports slash commands and ui stuffs introduced by discord
+- Supports slash commands and ui introduced by discord such as buttons
 - Created with the purpose of making our discord well moderated, neat and easy to interact with
 - With this bot we have created commands and useful embeds to make our racing leagues more professional and simple
