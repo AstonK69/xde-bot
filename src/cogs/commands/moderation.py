@@ -7,7 +7,6 @@ import os
 from src import load
 from run import bot, loadCog
 from src.load import Colours
-from discord import ChannelType
 
 
 def reloadCog(path, folder=True):
@@ -127,69 +126,6 @@ class Moderation(commands.Cog):
                 await ctx.respond(f"{cog} successfully reloaded!")
         except Exception as error:
             await ctx.respond(f'Something went wrong {error}')
-
-    @has_permissions(manage_channels=True)
-    @slash_command(name="create_league_category", description="Creates new section of channels for a new league")
-    @discord.option("category name", description="Provide the name of the league")
-    @discord.option("channel prefix", description="Provide the shortened version of the league name that should be on the front of channel names (ie. f1_05)")
-    async def create_league_category(self, ctx: discord.ApplicationContext, cat_name: str, pre_name: str):
-
-        await ctx.respond("Creating the channels for `" + cat_name + "` league")
-
-        if " " in pre_name:
-            pre_name = pre_name.replace(" ", "-")
-
-        admin_overwrites = {
-            ctx.guild.default_role: discord.PermissionOverwrite(send_messages=False)
-        }
-
-        category = await ctx.guild.create_category(cat_name)
-        ann_channel = await ctx.guild.create_text_channel(f"{pre_name}-announcements", category=category, overwrites=admin_overwrites)
-        await ann_channel.edit(type=ChannelType.news)
-
-        pts_channel = await ctx.guild.create_text_channel(f"{pre_name}-points", category=category, overwrites=admin_overwrites)
-        await pts_channel.edit(type=ChannelType.news)
-
-        info_channel = await ctx.guild.create_text_channel(f"{pre_name}-rules-and-info", category=category, overwrites=admin_overwrites)
-        await info_channel.edit(type=ChannelType.news)
-
-        await ctx.guild.create_text_channel(f"{pre_name}-sign-up", category=category)
-
-        await ctx.guild.create_text_channel(f"{pre_name}-chat", category=category)
-
-        await ctx.guild.create_text_channel(f"{pre_name}-livery-submissions", category=category)
-
-
-
-    @has_permissions(administrator=True)
-    @slash_command(name="delete_category", description="Deletes a category and all the channels it has")
-    @discord.option("category name", description="Select the category you want to delete", input_type=discord.CategoryChannel)
-    @discord.option("are you sure", description="Are you sure you want to delete this category", choices=[True, False])
-    async def delete_category(self, ctx: discord.ApplicationContext, category: discord.CategoryChannel, confirm: bool):
-
-        if confirm:
-            await ctx.respond("Deleting category...", ephemeral=True)
-
-            for i in category.channels:
-                await i.delete(reason=f"Bulk delete command performed by: {ctx.author.name}")
-            await category.delete(reason=f"Bulk delete command performed by: {ctx.author.name}")
-            await ctx.send("Successfully deleted category")
-        else:
-            await ctx.respond("Cancelled", ephemeral=True)
-
-
-    @has_permissions(manage_channels=True)
-    @slash_command(name="hide_category", description="Hides league that is completed and moves it to the bottom")
-    @discord.option("category name", description="Select the category you want to hide", input_type=discord.CategoryChannel)
-    async def hide_category(self, ctx: discord.ApplicationContext, category: discord.CategoryChannel):
-        overwrites = {
-            ctx.guild.default_role: discord.PermissionOverwrite(read_messages=False),
-            ctx.guild.get_role(777534984445231124): discord.PermissionOverwrite(read_messages=True, send_messages=True),
-            ctx.guild.get_role(777523593738977301): discord.PermissionOverwrite(read_messages=True, send_messages=True)
-        }
-
-        await category.edit(overwrites=overwrites)
-        await ctx.respond(f"`{category.name}` hidden successfully")
 
 
 def setup(bot):

@@ -10,16 +10,20 @@ run.py
 """
 
 import os
-import src.load
+
 import discord
 from discord.ext import commands
+
+import src.load
 
 intents = discord.Intents.all()
 
 prefix = "."
 activity = discord.Activity(type=discord.ActivityType.watching, name="Seven win all the time")
-bot = commands.Bot(command_prefix=prefix, case_insensitive=True, activity=activity, owner_id=[760602301790158868], intents=intents, status=discord.Status.do_not_disturb)
+bot = commands.Bot(command_prefix=prefix, case_insensitive=True, activity=activity, owner_id=[760602301790158868],
+                   intents=intents, status=discord.Status.do_not_disturb)
 bot.remove_command("help")
+
 
 def loadCog(path, folder=True):
     if folder:

@@ -1,14 +1,12 @@
 import asyncio
-
 from discord.ext import commands
 from discord.commands import slash_command
 import discord
-from run import bot
-import src.load
 from src.load import Colours
 from sqlite3 import connect
 import re
 from discord.ext.commands.core import has_permissions
+from discord import ChannelType
 
 
 class AttendView(discord.ui.View):
@@ -88,9 +86,21 @@ Not Turning Up:
 
         await AttendView.attend_embed_message.edit(embed=embed)
 
+    @staticmethod
+    def get_table_name():
+        result = XDE.get_cur_league_info()
+        return str([x[0] for x in result][0])
+
+    @staticmethod
+    def get_sign_up_name():
+        result = XDE.get_cur_league_info()
+        return str([x[1] for x in result][0])
+
     @discord.ui.button(label="Yes", style=discord.ButtonStyle.green, emoji="✅")
     async def yes_callback(self, button, ctx: discord.Interaction):
-        if XDE.check_if_in_db(ctx.user) is True:
+        table = AttendView.get_table_name()
+        sign_up_id = AttendView.get_sign_up_name()
+        if XDE.check_if_in_db(ctx.user, table) is True:
             if await AttendView.reacted_same_twice(ctx.user, AttendView.reacted_yes) is True:
                 await ctx.response.send_message("Removed from turning up", ephemeral=True)
                 # remove from yes list
@@ -103,11 +113,13 @@ Not Turning Up:
                     # add to yes list
             await AttendView.update_embed()
         else:
-            await ctx.response.send_message("You are not signed up to the league, do so in <#1169965237932413021>", ephemeral=True)
+            await ctx.response.send_message(f"You are not signed up to the league, do so in <#{sign_up_id}>", ephemeral=True)
 
     @discord.ui.button(label="Maybe", style=discord.ButtonStyle.blurple, emoji="❔")
     async def maybe_callback(self, button, ctx: discord.Interaction):
-        if XDE.check_if_in_db(ctx.user) is True:
+        table = AttendView.get_table_name()
+        sign_up_id = AttendView.get_sign_up_name()
+        if XDE.check_if_in_db(ctx.user, table) is True:
             if await AttendView.reacted_same_twice(ctx.user, AttendView.reacted_maybe) is True:
                 await ctx.response.send_message("Removed from possibly turning up", ephemeral=True)
                 # remove from maybe list
@@ -120,11 +132,13 @@ Not Turning Up:
                     # add to maybe list
             await AttendView.update_embed()
         else:
-            await ctx.response.send_message("You are not signed up to the league, do so in <#1169965237932413021>", ephemeral=True)
+            await ctx.response.send_message(f"You are not signed up to the league, do so in <#{sign_up_id}>", ephemeral=True)
 
     @discord.ui.button(label="No", style=discord.ButtonStyle.red, emoji="✖")
     async def no_callback(self, button, ctx: discord.Interaction):
-        if XDE.check_if_in_db(ctx.user) is True:
+        table = AttendView.get_table_name()
+        sign_up_id = AttendView.get_sign_up_name()
+        if XDE.check_if_in_db(ctx.user, table) is True:
             if await AttendView.reacted_same_twice(ctx.user, AttendView.reacted_no) is True:
                 await ctx.response.send_message("Removed from not turning up", ephemeral=True)
                 # remove from no list
@@ -139,7 +153,7 @@ Not Turning Up:
                     # add to no list
             await AttendView.update_embed()
         else:
-            await ctx.response.send_message("You are not signed up to the league, do so in <#1169965237932413021>", ephemeral=True)
+            await ctx.response.send_message(f"You are not signed up to the league, do so in <#{sign_up_id}>", ephemeral=True)
 
 class XDE(commands.Cog):
 
@@ -165,11 +179,11 @@ class XDE(commands.Cog):
             return None
 
     @staticmethod
-    def check_if_in_db(user: discord.Member):
+    def check_if_in_db(user: discord.Member, table: str):
         con = connect(XDE.path)
         cur = con.cursor()
 
-        result = cur.execute(f"select PlayerID from GT4_People where DiscordID = '{user.id}'")
+        result = cur.execute(f"select PlayerID from {table} where DiscordID = '{user.id}'")
         if len(result.fetchall()) == 0:
             con.close()
             return False
@@ -184,6 +198,14 @@ class XDE(commands.Cog):
         else:
             return False
 
+    @staticmethod
+    def get_cur_league_info():
+        con = connect(XDE.path)
+        cur = con.cursor()
+
+        result = cur.execute("select * from Current_League")
+        return result.fetchall()
+
 
     @slash_command(name="sign_up", description="Changes peoples nicknames")
     @discord.option("ac_name", description="What is your name on Assetto Corsa")
@@ -193,27 +215,31 @@ class XDE(commands.Cog):
     @discord.option("team_name", description="What is your team name (optional)", required=False)
     async def sign_up(self, ctx, ac_name: str, steam_id: str, custom_livery: bool, team_name="Not provided"):
 
-        if ctx.channel_id == 1171189350797680700: # xde = 762734160330227732, test = 1171189350797680700
-            if await self.check_first_message(ctx.author, ctx.channel) is None and self.check_if_in_db(ctx.author) is False:
+        result = XDE.get_cur_league_info()
+        table_name = str([x[0] for x in result][0])
+        sign_up_id = int([x[1] for x in result][0])
+        livery_sub_id = str([x[2] for x in result][0])
+
+        if ctx.channel_id == sign_up_id: # xde = sign_up_id, test = 1171189350797680700
+            if await self.check_first_message(ctx.author, ctx.channel) is None and self.check_if_in_db(ctx.author, table_name) is False:
                 if await self.matches_regex(steam_id) is True:
                     if custom_livery is True:
                         await ctx.respond(
-                            "Please make sure to send your livery in <#1169965404383354910> as soon as possible",
+                            f"Please make sure to send your livery in <#{livery_sub_id}> as soon as possible",
                             ephemeral=True)
                     else:
                         await ctx.respond(
-                            "Please tell us which of the premade liveries on the car you would like in <#1169965404383354910>",
+                            f"Please tell us which of the premade liveries on the car you would like in <#{livery_sub_id}>",
                             ephemeral=True)
 
                     con = connect(XDE.path)
                     cur = con.cursor()
 
-                    cur.execute(f"insert into GT4_People(DiscordID, DiscordName, SteamID, HasLivery, TeamName, Points) values ('{ctx.author.id}', '{ctx.author.name}', '{steam_id}', {custom_livery}, '{team_name}', 0)")
+                    cur.execute(f"insert into {table_name}(DiscordID, DiscordName, SteamID, HasLivery, TeamName, Points) values ('{ctx.author.id}', '{ctx.author.name}', '{steam_id}', {custom_livery}, '{team_name}', 0)")
                     con.commit()
 
                     con.close()
 
-                    src.load.signed_up_users.append(bot.get_user(ctx.author.id))
 
                     embed = discord.Embed(title=f"New sign up: {ctx.author.name}", colour=Colours.standard, description=f"""
 Discord User: {ctx.author.mention}
@@ -238,11 +264,14 @@ Livery: `{custom_livery}`
     @discord.option("user", description="Which user do you want to add points too")
     @discord.option("points", description="How many points do you want to add to this users total")
     async def add_points_manual(self, ctx, user: discord.Member, points: int):
+
+        table = AttendView.get_table_name()
+
         try:
             con = connect(XDE.path)
             cur = con.cursor()
 
-            cur.execute(f"update GT4_People set Points = Points + {points} where DiscordID='{user.id}'")
+            cur.execute(f"update {table} set Points = Points + {points} where DiscordID='{user.id}'")
             con.commit()
             con.close()
 
@@ -254,6 +283,8 @@ Livery: `{custom_livery}`
     @slash_command(name="round_points_add", description="Goes through all the people who said they were attending and asks for how many points they scored")
     async def round_points_add(self, ctx):
 
+        table = AttendView.get_table_name()
+
         await ctx.respond("Command started...", ephemeral=True)
         for i in AttendView.reacted_yes:
             await ctx.send(f"How many points did `{i.name}` get?")
@@ -263,7 +294,7 @@ Livery: `{custom_livery}`
                 con = connect(XDE.path)
                 cur = con.cursor()
 
-                cur.execute(f"update GT4_People set Points = Points + {int(points.content)} where DiscordID = '{points.author.id}'")
+                cur.execute(f"update {table} set Points = Points + {int(points.content)} where DiscordID = '{points.author.id}'")
                 con.commit()
                 con.close()
 
@@ -316,6 +347,143 @@ Not Turning Up:```""")
                              icon_url='https://cdn.discordapp.com/attachments/940889123437309972/1168232344256258058/smaller_xde_logo.png?ex=65510427&is=653e8f27&hm=5f07726900ba157438dc6da3be2bcd10db6e5e3daa9825e4814dd75ff0fa677d&')
 
         AttendView.attend_embed_message = await ctx.send(embed=embed, view=AttendView())
+
+    @has_permissions(manage_channels=True)
+    @slash_command(name="create_new_league", description="Creates all the necessary things (channels, db table etc) for a new league")
+    @discord.option("category name", description="Provide the name of the league")
+    @discord.option("channel prefix", description="Provide the shortened version of the league name that should be on the front of channel names (ie. f1_05)")
+    @discord.option("table name", description="What do you want the table in the database to be called (Usually something like GT4_People)")
+    async def create_new_league(self, ctx: discord.ApplicationContext, cat_name: str, pre_name: str, table_name: str):
+
+        await ctx.respond("Creating the channels for `" + cat_name + "` league, bare in mind they are hidden for everyone but mods, use /show_category to show it", ephemeral=True)
+
+        if " " in pre_name:
+            pre_name = pre_name.replace(" ", "-")
+
+        if " " in table_name:
+            table_name = table_name.replace(" ", "_")
+
+        overwrites = {
+            ctx.guild.default_role: discord.PermissionOverwrite(read_messages=False),
+            ctx.guild.get_role(1172866482338791465): discord.PermissionOverwrite(read_messages=True), # set moderator to see it
+            ctx.guild.get_role(1172866442677473341): discord.PermissionOverwrite(read_messages=True)  # set junior Moderator to see it
+        }
+
+        category = await ctx.guild.create_category(cat_name, overwrites=overwrites)
+        ann_channel = await ctx.guild.create_text_channel(f"{pre_name}-announcements", category=category,
+                                                          overwrites=overwrites)
+        await ann_channel.edit(type=ChannelType.news)
+
+        pts_channel = await ctx.guild.create_text_channel(f"{pre_name}-points", category=category)
+        await pts_channel.edit(type=ChannelType.news)
+
+        info_channel = await ctx.guild.create_text_channel(f"{pre_name}-rules-and-info", category=category)
+        await info_channel.edit(type=ChannelType.news)
+
+        await ctx.guild.create_text_channel(f"{pre_name}-sign-up", category=category)
+
+        await ctx.guild.create_text_channel(f"{pre_name}-chat", category=category)
+
+        await ctx.guild.create_text_channel(f"{pre_name}-livery-submissions", category=category)
+
+        con = connect(XDE.path)
+        cur = con.cursor()
+
+        cur.execute(f"create table {table_name}(PlayerID integer primary key unique not null , DiscordID text(50), DiscordName text(50), SteamID text(17), HasLivery real, TeamName text(50), Points integer)")
+        con.commit()
+        con.close()
+
+    @has_permissions(administrator=True)
+    @slash_command(name="league_db_names")
+    async def league_db_names(self, ctx):
+        cur = connect(XDE.path).cursor()
+        results = cur.execute("select name from main.sqlite_master where type='table' AND name not like 'sqlite_%' AND name not like 'Current_League'")
+        results = results.fetchall()
+        tables = ""
+        for i in results:
+            i = str(i)[2:][:-3]
+            tables = f"{tables}\n{i}"
+
+        await ctx.respond(tables, ephemeral=True)
+
+    @has_permissions(administrator=True)
+    @slash_command(name="delete_category", description="Deletes a category and all the channels it has")
+    @discord.option("category name", description="Select the category you want to delete", input_type=discord.CategoryChannel)
+    @discord.option("table to delete", description="Select which table to delete with this league, if you are not sure, run /league_db_names")
+    @discord.option("are you sure", description="Are you sure you want to delete this category", choices=[True, False])
+    async def delete_category(self, ctx: discord.ApplicationContext, category: discord.CategoryChannel, table: str, confirm: bool):
+
+        if confirm:
+            await ctx.respond("Deleting category...", ephemeral=True)
+
+            for i in category.channels:
+                await i.delete()
+            await category.delete()
+
+            con = connect(XDE.path)
+            cur = con.cursor()
+
+            cur.execute(f"drop table {table}")
+            con.commit()
+            con.close()
+
+        else:
+            await ctx.respond("Cancelled", ephemeral=True)
+
+    @has_permissions(manage_channels=True)
+    @slash_command(name="hide_category", description="Hides league that is completed and moves it to the bottom")
+    @discord.option("category name", description="Select the category you want to hide", input_type=discord.CategoryChannel)
+    async def hide_category(self, ctx: discord.ApplicationContext, category: discord.CategoryChannel):
+        overwrites = {
+            ctx.guild.default_role: discord.PermissionOverwrite(read_messages=False),
+            ctx.guild.get_role(1172866482338791465): discord.PermissionOverwrite(read_messages=True, send_messages=True),
+            ctx.guild.get_role(1172866442677473341): discord.PermissionOverwrite(read_messages=True, send_messages=True)
+        }
+
+        await category.edit(overwrites=overwrites)
+        for i in category.channels:
+            await i.edit(overwrites=overwrites)
+        await ctx.respond(f"`{category.name}` hidden successfully", ephemeral=True)
+
+    @has_permissions(manage_channels=True)
+    @slash_command(name="show_category", description="Shows league that is new")
+    @discord.option("category name", description="Select the category you want to hide", input_type=discord.CategoryChannel)
+    async def show_category(self, ctx: discord.ApplicationContext, category: discord.CategoryChannel):
+        admin_overwrites = {
+            ctx.guild.default_role: discord.PermissionOverwrite(read_messages=True, send_messages=False),
+            ctx.guild.get_role(1172866482338791465): discord.PermissionOverwrite(read_messages=True, send_messages=True),
+            ctx.guild.get_role(1172866442677473341): discord.PermissionOverwrite(read_messages=True, send_messages=True)
+        }
+
+        overwrites = {
+            ctx.guild.default_role: discord.PermissionOverwrite(read_messages=True, send_messages=True),
+            ctx.guild.get_role(1172866482338791465): discord.PermissionOverwrite(read_messages=True, send_messages=True),
+            ctx.guild.get_role(1172866442677473341): discord.PermissionOverwrite(read_messages=True, send_messages=True)
+        }
+
+        await category.edit(overwrites=admin_overwrites)
+        for i in category.channels:
+            if i.is_news() is True:
+                await i.edit(overwrites=admin_overwrites)
+            if i.is_news() is False:
+                await i.edit(overwrites=overwrites)
+        await ctx.respond(f"`{category.name}` shown successfully", ephemeral=True)
+
+    @has_permissions(administrator=True)
+    @slash_command(name="set_current_league", description="Used to change the current league")
+    @discord.option("current league", description="Which league is happening now")
+    @discord.option("sign up channel id", description="Please provide the channel id of the sign up channel for this league")
+    @discord.option("livery submission channel id", description="Please provide the channel id of the livery submission channel for this league")
+    async def set_current_league(self, ctx, current_league: str, sign_up_id: str, livery_sub_id: str):
+        con = connect(XDE.path)
+        cur = con.cursor()
+
+        cur.execute("delete from Current_League")
+        cur.execute(f"insert into Current_League(Current, SignUpID, LiverySubID) values ('{current_league}', '{sign_up_id}', '{livery_sub_id}')")
+        con.commit()
+        con.close()
+
+        await ctx.respond(f"Current league changed to `{current_league}`", ephemeral=True)
 
 def setup(bot):
     bot.add_cog(XDE(bot))
