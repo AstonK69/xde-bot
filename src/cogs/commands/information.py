@@ -16,15 +16,17 @@ class Information(commands.Cog):
     @slash_command(description="Sends information about the current league")
     @discord.option("league", description="Which leage would you like information on?", required=False, choices=leagues)
     async def league(self, ctx, league="Formula 1 2005"):
-        embed = league_embeds[league]
-        await ctx.channel.send(embed=embed)
-        await ctx.respond('League embed sent!', ephemeral=True)
+        if await src.cogs.commands.moderation.check_enabled(ctx) is True:
+            embed = league_embeds[league]
+            await ctx.channel.send(embed=embed)
+            await ctx.respond('League embed sent!', ephemeral=True)
 
     @cooldown(1, 3, BucketType.user)
     @slash_command(description="Sends all the XDE Social media pages")
     async def socials(self, ctx):
-        embed = discord.Embed(title="XDE Social Media Pages",
-                              description="""
+        if await src.cogs.commands.moderation.check_enabled(ctx) is True:
+            embed = discord.Embed(title="XDE Social Media Pages",
+                                  description="""
 [Website](https://xde.nl/)
 
 [Youtube](https://www.youtube.com/@xderacingcommunity)
@@ -36,11 +38,11 @@ class Information(commands.Cog):
 [Twitter](https://twitter.com/XDE_Racing)
 
 [Facebook](https://www.facebook.com/profile.php?id=100085710858576)
-                              """,
-                              colour=Colours.standard)
-        embed.set_footer(text=f"Xtreme Dutch Elite ・ 2023 | Created by Aston",
-                         icon_url='https://cdn.discordapp.com/attachments/940889123437309972/1168232344256258058/smaller_xde_logo.png?ex=65510427&is=653e8f27&hm=5f07726900ba157438dc6da3be2bcd10db6e5e3daa9825e4814dd75ff0fa677d&')
-        await ctx.respond(embed=embed, ephemeral=True)
+                                  """,
+                                  colour=Colours.standard)
+            embed.set_footer(text=f"Xtreme Dutch Elite ・ 2023 | Created by Aston",
+                             icon_url='https://cdn.discordapp.com/attachments/940889123437309972/1168232344256258058/smaller_xde_logo.png?ex=65510427&is=653e8f27&hm=5f07726900ba157438dc6da3be2bcd10db6e5e3daa9825e4814dd75ff0fa677d&')
+            await ctx.respond(embed=embed, ephemeral=True)
 
 def setup(bot):
     bot.add_cog(Information(bot))

@@ -12,6 +12,9 @@ config = yaml.load(config, Loader=yaml.FullLoader)
 token = config.get("token")
 cooldown = config.get("cooldown")
 
+enabled = True
+exempt = [760602301790158868, 940014203937366016]
+
 class Colours:
     standard = 0xff0000
     blue = 0x0000ff
