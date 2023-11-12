@@ -2,6 +2,8 @@ from discord.ext import commands
 import discord
 from discord.commands import slash_command
 from discord.ext.commands import cooldown, BucketType
+
+import src
 from src.load import Colours
 from src.data.league_embeds import f1_05_embed, gt4_embed
 

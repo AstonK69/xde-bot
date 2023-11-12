@@ -421,6 +421,9 @@ Not Turning Up:```""")
                 i = str(i)[2:][:-3]
                 tables = f"{tables}\n{i}"
 
+            if tables == "":
+                tables = "No tables currently"
+
             await ctx.respond(tables, ephemeral=True)
 
     @has_permissions(administrator=True)

@@ -52,7 +52,7 @@ class Misc(commands.Cog):
     @slash_command(name="presence", description="Changes status and activity of bot")
     @discord.option("activity_type", description="Playing, Streaming, Listening, Watching [message]", required=False, choices=activity_types)
     @discord.option("activity_content", description="Changes the status message on the bots profile", required=False)
-    async def presence(self, ctx, activity_type: str, activity_content: str):
+    async def presence(self, ctx, activity_type = "Watching", activity_content = "Seven win all the time"):
         if await src.cogs.commands.moderation.check_enabled(ctx) is True:
             try:
                 if a_dict[activity_type] == 0:
