@@ -11,6 +11,5 @@ class on_ready(commands.Cog):
         print("XDE Bot up and running!")
         print("=======================")
 
-
 def setup(bot):
     bot.add_cog(on_ready(bot))

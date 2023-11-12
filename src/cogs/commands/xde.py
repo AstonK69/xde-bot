@@ -238,7 +238,7 @@ class XDE(commands.Cog):
                         con = connect(XDE.path)
                         cur = con.cursor()
 
-                        cur.execute(f"insert into {table_name}(DiscordID, DiscordName, SteamID, HasLivery, TeamName, Points) values ('{ctx.author.id}', '{ctx.author.name}', '{steam_id}', {custom_livery}, '{team_name}', 0)")
+                        cur.execute(f"insert into {table_name}(DiscordID, DiscordName, SteamID, HasLivery, TeamName) values ('{ctx.author.id}', '{ctx.author.name}', '{steam_id}', {custom_livery}, '{team_name}')")
                         con.commit()
 
                         con.close()
@@ -266,7 +266,8 @@ Livery: `{custom_livery}`
     @slash_command(name="add_points_manual", description="Adds points to someone in the league")
     @discord.option("user", description="Which user do you want to add points too")
     @discord.option("points", description="How many points do you want to add to this users total")
-    async def add_points_manual(self, ctx, user: discord.Member, points: int):
+    @discord.option("round", description="What round is it")
+    async def add_points_manual(self, ctx, user: discord.Member, points: int, round: str):
         if await src.cogs.commands.moderation.check_enabled(ctx) is True:
 
             table = AttendView.get_table_name()
@@ -275,7 +276,7 @@ Livery: `{custom_livery}`
                 con = connect(XDE.path)
                 cur = con.cursor()
 
-                cur.execute(f"update {table} set Points = Points + {points} where DiscordID='{user.id}'")
+                cur.execute(f"update {table} set Round{round} = {points}, Points = Points + {points} where DiscordID='{user.id}'")
                 con.commit()
                 con.close()
 
@@ -285,7 +286,8 @@ Livery: `{custom_livery}`
 
     @has_permissions(administrator=True)
     @slash_command(name="round_points_add", description="Goes through all the people who said they were attending and asks for how many points they scored")
-    async def round_points_add(self, ctx):
+    @discord.option("round", description="What round is it")
+    async def round_points_add(self, ctx, round: str):
         if await src.cogs.commands.moderation.check_enabled(ctx) is True:
 
             table = AttendView.get_table_name()
@@ -299,9 +301,11 @@ Livery: `{custom_livery}`
                     con = connect(XDE.path)
                     cur = con.cursor()
 
-                    cur.execute(f"update {table} set Points = Points + {int(points.content)} where DiscordID = '{points.author.id}'")
+                    cur.execute(f"update {table} set Round{round} = {int(points.content)}, Points = Points + {int(points.content)} where DiscordID = '{i.id}'")
                     con.commit()
                     con.close()
+
+                    await ctx.send(f"`{points.content}` points added to {i.name}")
 
                 except asyncio.TimeoutError as e:
                     await ctx.send("You ran out of time to respond")
@@ -359,7 +363,8 @@ Not Turning Up:```""")
     @discord.option("category name", description="Provide the name of the league")
     @discord.option("channel prefix", description="Provide the shortened version of the league name that should be on the front of channel names (ie. f1_05)")
     @discord.option("table name", description="What do you want the table in the database to be called (Usually something like GT4_People)")
-    async def create_new_league(self, ctx: discord.ApplicationContext, cat_name: str, pre_name: str, table_name: str):
+    @discord.option("rounds", description="How many rounds are there in the league")
+    async def create_new_league(self, ctx: discord.ApplicationContext, cat_name: str, pre_name: str, table_name: str, rounds: int):
         if await src.cogs.commands.moderation.check_enabled(ctx) is True:
 
             await ctx.respond("Creating the channels for `" + cat_name + "` league, bare in mind they are hidden for everyone but mods, use /show_category to show it", ephemeral=True)
@@ -372,8 +377,8 @@ Not Turning Up:```""")
 
             overwrites = {
                 ctx.guild.default_role: discord.PermissionOverwrite(read_messages=False),
-                ctx.guild.get_role(1172866482338791465): discord.PermissionOverwrite(read_messages=True), # set moderator to see it
-                ctx.guild.get_role(1172866442677473341): discord.PermissionOverwrite(read_messages=True)  # set junior Moderator to see it
+                ctx.guild.get_role(777534984445231124): discord.PermissionOverwrite(read_messages=True), # set moderator to see it
+                ctx.guild.get_role(1070043470129020938): discord.PermissionOverwrite(read_messages=True)  # set junior Moderator to see it
             }
 
             category = await ctx.guild.create_category(cat_name, overwrites=overwrites)
@@ -396,7 +401,11 @@ Not Turning Up:```""")
             con = connect(XDE.path)
             cur = con.cursor()
 
-            cur.execute(f"create table {table_name}(PlayerID integer primary key unique not null , DiscordID text(50), DiscordName text(50), SteamID text(17), HasLivery real, TeamName text(50), Points integer)")
+            round_list = []
+            for i in range(rounds):
+                round_list.append(f"Round{i+1}")
+
+            cur.execute(f"create table {table_name}(PlayerID integer primary key unique not null , DiscordID text(50), DiscordName text(50), SteamID text(17), HasLivery real, TeamName text(50), {' integer default 0 not null, '.join(round_list)} integer default 0 not null, Points integer default 0 not null)")
             con.commit()
             con.close()
 
@@ -446,8 +455,8 @@ Not Turning Up:```""")
         if await src.cogs.commands.moderation.check_enabled(ctx) is True:
             overwrites = {
                 ctx.guild.default_role: discord.PermissionOverwrite(read_messages=False),
-                ctx.guild.get_role(1172866482338791465): discord.PermissionOverwrite(read_messages=True, send_messages=True),
-                ctx.guild.get_role(1172866442677473341): discord.PermissionOverwrite(read_messages=True, send_messages=True)
+                ctx.guild.get_role(777534984445231124): discord.PermissionOverwrite(read_messages=True, send_messages=True),
+                ctx.guild.get_role(1070043470129020938): discord.PermissionOverwrite(read_messages=True, send_messages=True)
             }
 
             await category.edit(overwrites=overwrites)
@@ -462,14 +471,14 @@ Not Turning Up:```""")
         if await src.cogs.commands.moderation.check_enabled(ctx) is True:
             admin_overwrites = {
                 ctx.guild.default_role: discord.PermissionOverwrite(read_messages=True, send_messages=False),
-                ctx.guild.get_role(1172866482338791465): discord.PermissionOverwrite(read_messages=True, send_messages=True),
-                ctx.guild.get_role(1172866442677473341): discord.PermissionOverwrite(read_messages=True, send_messages=True)
+                ctx.guild.get_role(777534984445231124): discord.PermissionOverwrite(read_messages=True, send_messages=True),
+                ctx.guild.get_role(1070043470129020938): discord.PermissionOverwrite(read_messages=True, send_messages=True)
             }
 
             overwrites = {
                 ctx.guild.default_role: discord.PermissionOverwrite(read_messages=True, send_messages=True),
-                ctx.guild.get_role(1172866482338791465): discord.PermissionOverwrite(read_messages=True, send_messages=True),
-                ctx.guild.get_role(1172866442677473341): discord.PermissionOverwrite(read_messages=True, send_messages=True)
+                ctx.guild.get_role(777534984445231124): discord.PermissionOverwrite(read_messages=True, send_messages=True),
+                ctx.guild.get_role(1070043470129020938): discord.PermissionOverwrite(read_messages=True, send_messages=True)
             }
 
             await category.edit(overwrites=admin_overwrites)
