@@ -209,7 +209,7 @@ class XDE(commands.Cog):
         return result.fetchall()
 
 
-    @slash_command(name="sign_up", description="Changes peoples nicknames")
+    @slash_command(name="sign_up", description="Signs you up for the current league")
     @discord.option("ac_name", description="What is your name on Assetto Corsa")
     @discord.option("steam_id", description="What is your Steam ID (http://vacbanned.com/)")
     @discord.option("custom_livery", description="Are you going to provide your own custom livery",
@@ -262,6 +262,40 @@ Livery: `{custom_livery}`
             else:
                 await ctx.respond("Wrong channel genius", ephemeral=True)
 
+    @slash_command(name="cancel_sign_up", description="Removes your sign up for the current league")
+    async def cancel_sign_up(self, ctx):
+        if await src.cogs.commands.moderation.check_enabled(ctx) is True:
+
+            try:
+                table = AttendView.get_table_name()
+                con = connect(XDE.path)
+                cur = con.cursor()
+
+                cur.execute(f"delete from {table} where DiscordID = '{ctx.author.id}'")
+                con.commit()
+                con.close()
+
+                await ctx.respond("Removed from the sign up list, hopefully we can see you another time")
+            except:
+                await ctx.respond("You are not signed up to the current league")
+
+    @has_permissions(kick_members=True)
+    @slash_command(name="admin_cancel_sign_up", description="Allows admins to remove anyone from the current league")
+    @discord.option("user", description="Which user do you want to remove")
+    async def admin_cancel_sign_up(self, ctx, user: discord.Member):
+        try:
+            table = AttendView.get_table_name()
+            con = connect(XDE.path)
+            cur = con.cursor()
+
+            cur.execute(f"delete from {table} where DiscordID = '{user.id}'")
+            con.commit()
+            con.close()
+
+            await ctx.respond(f"Removed `{user.name}` from the sign up list", ephemeral=True)
+        except:
+            await ctx.respond("This user is not signed up", ephemeral=True)
+
     @has_permissions(administrator=True)
     @slash_command(name="add_points_manual", description="Adds points to someone in the league")
     @discord.option("user", description="Which user do you want to add points too")
@@ -269,10 +303,8 @@ Livery: `{custom_livery}`
     @discord.option("round", description="What round is it")
     async def add_points_manual(self, ctx, user: discord.Member, points: int, round: str):
         if await src.cogs.commands.moderation.check_enabled(ctx) is True:
-
-            table = AttendView.get_table_name()
-
             try:
+                table = AttendView.get_table_name()
                 con = connect(XDE.path)
                 cur = con.cursor()
 
