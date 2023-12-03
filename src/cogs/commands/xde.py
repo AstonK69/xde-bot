@@ -418,17 +418,19 @@ Not Turning Up:```""")
                                                               overwrites=overwrites)
             await ann_channel.edit(type=ChannelType.news)
 
-            pts_channel = await ctx.guild.create_text_channel(f"{pre_name}-points", category=category)
+            pts_channel = await ctx.guild.create_text_channel(f"{pre_name}-points", category=category, overwrites=overwrites)
             await pts_channel.edit(type=ChannelType.news)
 
-            info_channel = await ctx.guild.create_text_channel(f"{pre_name}-rules-and-info", category=category)
+            info_channel = await ctx.guild.create_text_channel(f"{pre_name}-rules-and-info", category=category, overwrites=overwrites)
             await info_channel.edit(type=ChannelType.news)
 
-            await ctx.guild.create_text_channel(f"{pre_name}-sign-up", category=category)
+            await ctx.guild.create_text_channel(f"{pre_name}-sign-up", category=category, overwrites=overwrites)
 
-            await ctx.guild.create_text_channel(f"{pre_name}-chat", category=category)
+            await ctx.guild.create_text_channel(f"{pre_name}-chat", category=category, overwrites=overwrites)
 
-            await ctx.guild.create_text_channel(f"{pre_name}-livery-submissions", category=category)
+            await ctx.guild.create_text_channel(f"{pre_name}-setups", category=category, overwrites=overwrites)
+
+            await ctx.guild.create_text_channel(f"{pre_name}-livery-submissions", category=category, overwrites=overwrites)
 
             con = connect(XDE.path)
             cur = con.cursor()
