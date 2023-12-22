@@ -14,7 +14,7 @@ import asyncio
 
 def check_existing_entry(date: str, time: str):
     path = f"{__file__}".replace("\\", "/")
-    path = path.replace("cogs/commands/update.py", "data/sauce_market.db")
+    path = path.replace("cogs/commands/saucer.py", "data/sauce_market.db")
 
     con = connect(path)
     cur = con.cursor()
