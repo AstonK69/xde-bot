@@ -124,7 +124,7 @@ class Saucer(commands.Cog):
         prices = re.findall(r'\$(\d+)\s*\|', embed_message.embeds[0].description)
         cur_time = datetime.now(pytz.timezone("UTC"))
         date = cur_time.strftime('%Y-%m-%d')
-        time = cur_time.strftime('%H:00')
+        time = cur_time.strftime('%H:00:00')
 
         if len(prices) != 5:
             await ctx.respond('The regex is still not right there is more than 5 prices in the list')
