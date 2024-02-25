@@ -81,7 +81,7 @@ http://xde.nl:8772/live-timing?server=1
 **Server Link**
 https://acstuff.ru/s/q:race/online/join?httpPort=9604&ip=89.117.56.93""")
 
-f1_05_embed.set_footer(text=f"Xtreme Dutch Elite ・ 2023 | Created by Aston",
+f1_05_embed.set_footer(text=f"Xtreme Dutch Elite ・ 2024 | Created by Aston",
                        icon_url='https://cdn.discordapp.com/attachments/940889123437309972/1168232344256258058/smaller_xde_logo.png?ex=65510427&is=653e8f27&hm=5f07726900ba157438dc6da3be2bcd10db6e5e3daa9825e4814dd75ff0fa677d&')
 
 ########################################################################################################################
@@ -163,5 +163,93 @@ http://xde.nl:8772/live-timing?server=1
 **Server Link**
 https://acstuff.ru/s/q:race/online/join?httpPort=9604&ip=89.117.56.93""")
 
-gt4_embed.set_footer(text=f"Xtreme Dutch Elite ・ 2023 | Created by Aston",
+gt4_embed.set_footer(text=f"Xtreme Dutch Elite ・ 2024 | Created by Aston",
+                       icon_url='https://cdn.discordapp.com/attachments/940889123437309972/1168232344256258058/smaller_xde_logo.png?ex=65510427&is=653e8f27&hm=5f07726900ba157438dc6da3be2bcd10db6e5e3daa9825e4814dd75ff0fa677d&')
+
+########################################################################################################################
+##############################################   Formula 4   ###############################################
+########################################################################################################################
+
+f4_embed = discord.Embed(title="XDE Formula 4 Championship",
+                            description="[Live Timings](http://ac.xde.nl:8772/live-timing?server=1) | [Server Link](https://acstuff.ru/s/q:race/online/join?httpPort=9604&ip=89.117.56.93) | [Website](https://xde.nl/)",
+                            colour=Colours.standard)
+
+f4_embed.set_image(
+    url="https://cdn.discordapp.com/attachments/1208078419187867669/1210987138955481148/Screenshot_formula_4_brasil_ks_red_bull_ring_23-1-124-22-28-36.png?ex=65ec8ea8&is=65da19a8&hm=3bce3d4b271a9f54bca958b4470b5730f7c33f1e324d18784b8a8c8c0a8cf92b&")
+
+f4_embed.add_field(name="", value="""**```ml
+‎
+     XTREME DUTCH ELITE FORMULA 4 CHAMPIONSHIP
+        ```**""", inline=False)
+
+f4_embed.add_field(name="",
+                      value="The current league we are running in XDE is in the Formula 4 cars, there is 8 rounds of different style tracks which makes for some amazing racing. We run our races on sunday evenings for europe and below we have made timestamps to put all session times into your own timezone. All the necessary information about the league and signing up is below:",
+                      inline=False)
+
+f4_embed.add_field(name="Calendar", value="here are all the different tracks on the calendar for the league:",
+                      inline=False)
+f4_embed.add_field(name="", value=""">>> **Round 1**
+Assen
+Laps: `TBA`""")
+f4_embed.add_field(name="", value=""">>> **Round 2**
+COTA
+Laps: `TBA`""")
+f4_embed.add_field(name="", value=""">>> **Round 3**
+Nurburgring GP
+Laps: `TBA`""")
+f4_embed.add_field(name="", value=""">>> **Round 4**
+Imola
+Laps: `TBA`""")
+f4_embed.add_field(name="", value=""">>> **Round 5**
+Monaco
+Laps: `TBA`""")
+f4_embed.add_field(name="", value=""">>> **Round 6**
+Laguna Seca
+Laps: `TBA`""")
+f4_embed.add_field(name="", value=""">>> **Round 7**
+Red Bull Ring
+Laps: `TBA`""")
+f4_embed.add_field(name="", value=""">>> **Round 8**
+Suzuka
+Laps: `TBA`""")
+
+f4_embed.add_field(name="Session Times", value="""The layout of the evening consists of a practice session which we dont require you to be there for, our briefing which we expect everyone to be in voice chat for, qualifying and the 2 races. The second race starting grid is the reverse of the finishing results of race one. Below is the times and length for all the sessions on the day:
+(Times are subject to change and may vary from weekend to weekend)""",
+                      inline=False)
+f4_embed.add_field(name="", value=""">>> **Practice**
+<t:1698950700:t> - <t:1698952500:t> (30 Minutes)""", inline=False)
+f4_embed.add_field(name="", value=""">>> **Briefing**
+<t:1698952500:t> - <t:1698953400:t> (15 Minutes)""", inline=False)
+f4_embed.add_field(name="", value=""">>> **Qualifying**
+<t:1698953400:t> - <t:1698954600:t> (20 Minutes)""", inline=False)
+f4_embed.add_field(name="", value=""">>> **Race 1 - Standard**
+<t:1698954600:t> - <t:1698956400:t> (30 Minutes)""", inline=False)
+f4_embed.add_field(name="", value=""">>> **Race 2 - Reverse Grid**
+<t:1698956400:t> - <t:1698958200:t> (30 Minutes)""", inline=False)
+
+f4_embed.add_field(name="Discord channels",
+                      value="Here are all the channel links for all the channels dedicated to the league:", inline=False)
+f4_embed.add_field(name="", value="""> Updates => <#1211269457603989504>
+> Points => <#1211269460787339345>
+> Rules => <#1211269463547318322>
+> Sign-up => <#1211269467187847239>
+> General chat => <#1211269468903182347>
+> Liveries => <#1211269473076781096>""", inline=False)
+
+f4_embed.add_field(name="Useful links",
+                      value="Below are all the useful links that you will need if you're taking part in the formula 4 league:",
+                      inline=False)
+f4_embed.add_field(name="", value=""">>> **Rulebook** (We do encourage you to look briefly at it)
+https://docs.google.com/document/d/1b_4IPDaK4ua2V_puidIjvxnxhR5ojTdZYb5d5hDaCsA/edit?usp=sharing
+
+**Download links** (Cars, Tracks, Safety car and Liveries)
+https://drive.google.com/drive/folders/16qVHAs38r6s1Ot_liC_QGVwr5sjKfl16?usp=drive_link
+
+**Live Timing Page**
+http://xde.nl:8772/live-timing?server=1
+
+**Server Link**
+https://acstuff.ru/s/q:race/online/join?httpPort=9604&ip=89.117.56.93""")
+
+f4_embed.set_footer(text=f"Xtreme Dutch Elite ・ 2024 | Created by Aston",
                        icon_url='https://cdn.discordapp.com/attachments/940889123437309972/1168232344256258058/smaller_xde_logo.png?ex=65510427&is=653e8f27&hm=5f07726900ba157438dc6da3be2bcd10db6e5e3daa9825e4814dd75ff0fa677d&')

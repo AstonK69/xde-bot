@@ -5,10 +5,10 @@ from discord.ext.commands import cooldown, BucketType
 
 import src
 from src.load import Colours
-from src.data.league_embeds import f1_05_embed, gt4_embed
+from src.data.league_embeds import f1_05_embed, gt4_embed, f4_embed
 
-leagues = ["Formula 1 2005", "Porsche GT4 Challenge"]
-league_embeds = {"Formula 1 2005": f1_05_embed, "Porsche GT4 Challenge": gt4_embed}
+leagues = ["Formula 1 2005", "Porsche GT4 Challenge", "Formula 4"]
+league_embeds = {"Formula 1 2005": f1_05_embed, "Porsche GT4 Challenge": gt4_embed, "Formula 4": f4_embed}
 
 class Information(commands.Cog):
     def __init__(self, bot):
@@ -17,7 +17,7 @@ class Information(commands.Cog):
     @cooldown(1, 3, BucketType.user)
     @slash_command(description="Sends information about the current league")
     @discord.option("league", description="Which leage would you like information on?", required=False, choices=leagues)
-    async def league(self, ctx, league="Formula 1 2005"):
+    async def league(self, ctx, league="Formula 4"):
         if await src.cogs.commands.moderation.check_enabled(ctx) is True:
             embed = league_embeds[league]
             await ctx.channel.send(embed=embed)
@@ -42,7 +42,7 @@ class Information(commands.Cog):
 [Facebook](https://www.facebook.com/profile.php?id=100085710858576)
                                   """,
                                   colour=Colours.standard)
-            embed.set_footer(text=f"Xtreme Dutch Elite ・ 2023 | Created by Aston",
+            embed.set_footer(text=f"Xtreme Dutch Elite ・ 2024 | Created by Aston",
                              icon_url='https://cdn.discordapp.com/attachments/940889123437309972/1168232344256258058/smaller_xde_logo.png?ex=65510427&is=653e8f27&hm=5f07726900ba157438dc6da3be2bcd10db6e5e3daa9825e4814dd75ff0fa677d&')
             await ctx.respond(embed=embed, ephemeral=True)
 

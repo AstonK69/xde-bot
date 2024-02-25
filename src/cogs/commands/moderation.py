@@ -43,7 +43,7 @@ class Moderation(commands.Cog):
             embed = discord.Embed(title=f"{member.name} banned", description=f"Reason: {reason}", colour=Colours.standard)
             embed.add_field(name="Joined:", value=joined, inline=False)
             embed.add_field(name="Banned by:", value=ctx.author.name)
-            embed.set_footer(text=f"Xtreme Dutch Elite ・ 2023 | Created by Aston")
+            embed.set_footer(text=f"Xtreme Dutch Elite ・ 2024 | Created by Aston")
             try:
                 await member.ban(reason=reason)
             except:
@@ -74,7 +74,7 @@ class Moderation(commands.Cog):
             embed = discord.Embed(title=f"{member.name} kicked", description=f"Reason: {reason}", colour=Colours.standard)
             embed.add_field(name="Joined:", value=joined, inline=False)
             embed.add_field(name="Kicked by:", value=ctx.author.name)
-            embed.set_footer(text=f"Xtreme Dutch Elite ・ 2023 | Created by Aston")
+            embed.set_footer(text=f"Xtreme Dutch Elite ・ 2024 | Created by Aston")
             try:
                 await member.kick(reason=reason)
             except:
@@ -104,7 +104,7 @@ class Moderation(commands.Cog):
                                   colour=Colours.standard)
             embed.add_field(name="Timed out for:", value=f"{hours} hours")
             embed.add_field(name="Timed out by:", value=ctx.author.name)
-            embed.set_footer(text=f"Xtreme Dutch Elite ・ 2023 | Created by Aston")
+            embed.set_footer(text=f"Xtreme Dutch Elite ・ 2024 | Created by Aston")
             duration = datetime.timedelta(hours=hours)
             try:
                 await member.timeout_for(duration=duration, reason=reason)

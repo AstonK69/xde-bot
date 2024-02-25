@@ -29,7 +29,7 @@ class Saucer(commands.Cog):
 
     def __init__(self, bot):
         self.bot = bot
-        self.reminder.start()
+        #self.reminder.start()
         self.path = f"{__file__}".replace("\\", "/")
         self.path = self.path.replace("cogs/commands/saucer.py", "data/sauce_market.db")
         self.graph_path = self.path.replace("sauce_market.db", "graph.png")

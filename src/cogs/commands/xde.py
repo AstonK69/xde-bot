@@ -59,12 +59,12 @@ class AttendView(discord.ui.View):
         maybe_str = "\n".join(formatted_maybe_list)
         no_str = "\n".join(formatted_no_list)
 
-        embed = discord.Embed(title=f"XDE Porsche GT4 Challenge Round {AttendView.attend_embed_round}",
+        embed = discord.Embed(title=f"XDE Formula 4 Round {AttendView.attend_embed_round}",
                               description="[Live Timings](http://ac.xde.nl:8772/live-timing?server=1) | [Server Link](https://acstuff.ru/s/q:race/online/join?httpPort=9604&ip=89.117.56.93) | [Website](https://xde.nl/)",
                               colour=Colours.standard)
 
         embed.set_image(
-            url=XDE.gt4_track_maps[AttendView.attend_embed_position])
+            url=XDE.f4_track_maps[AttendView.attend_embed_position])
 
         embed.add_field(name="", value=f"""**```ml
         ‎
@@ -83,7 +83,7 @@ Not Turning Up:
 
         embed.add_field(name="", value="Are you turning up?")
 
-        embed.set_footer(text=f"Xtreme Dutch Elite ・ 2023 | Created by Aston",
+        embed.set_footer(text=f"Xtreme Dutch Elite ・ 2024 | Created by Aston",
                          icon_url='https://cdn.discordapp.com/attachments/940889123437309972/1168232344256258058/smaller_xde_logo.png?ex=65510427&is=653e8f27&hm=5f07726900ba157438dc6da3be2bcd10db6e5e3daa9825e4814dd75ff0fa677d&')
 
         await AttendView.attend_embed_message.edit(embed=embed)
@@ -252,7 +252,7 @@ Team: `{team_name}`
 Livery: `{custom_livery}`
                         """)
                         embed.set_thumbnail(url=str(ctx.author.display_avatar))
-                        embed.set_footer(text=f"Xtreme Dutch Elite ・ 2023 | Created by Aston",
+                        embed.set_footer(text=f"Xtreme Dutch Elite ・ 2024 | Created by Aston",
                                          icon_url='https://cdn.discordapp.com/attachments/940889123437309972/1168232344256258058/smaller_xde_logo.png?ex=65510427&is=653e8f27&hm=5f07726900ba157438dc6da3be2bcd10db6e5e3daa9825e4814dd75ff0fa677d&')
                         await ctx.send(embed=embed)
                     else:
@@ -342,17 +342,19 @@ Livery: `{custom_livery}`
                 except asyncio.TimeoutError as e:
                     await ctx.send("You ran out of time to respond")
 
-    gt4_league_rounds = ["1: Barcelona", "2: Palmadera", "3: Brands Hatch", "4: Sebring", "5: Monza", "6: Deep Forest"]
-    gt4_track_maps = ["https://cdn.discordapp.com/attachments/764190503867908097/1172589353822867587/outline.png?ex=6560ddef&is=654e68ef&hm=8667be27bb4e86fa6674ed66f64f63f6ab04bea7f83ce166e8c35bd34f5b46ec&",
-                      "https://cdn.discordapp.com/attachments/764190503867908097/1172589566197243944/outline.png?ex=6560de22&is=654e6922&hm=bf8b89e8278775d784b46b60cb093a46e5c8590fbf31b20568fc56dab49452c6&",
-                      "https://cdn.discordapp.com/attachments/764190503867908097/1172589692894593034/outline.png?ex=6560de40&is=654e6940&hm=2f78b7733243820e938c8e26af153da9dcdfc7a8af707701c882e2c8b4c1a59c&",
-                      "https://cdn.discordapp.com/attachments/764190503867908097/1172590347621257216/outline.png?ex=6560dedc&is=654e69dc&hm=eec4cdd2acddf910f9d2dc20a847104a167dd1ddb3479e8b740769ef9de2c39e&",
-                      "https://cdn.discordapp.com/attachments/764190503867908097/1172590664689655868/outline.png?ex=6560df28&is=654e6a28&hm=57402e0f0da9500ba9724ad7718ca46f7cefd123136bbf8737a63d347e891624&",
-                      "https://cdn.discordapp.com/attachments/764190503867908097/1172590841450209290/outline.png?ex=6560df52&is=654e6a52&hm=9135fc048a7fd37dc88f7b5fdb48dc1728839e2182708c44711fcb699b994ed8&"]
+    f4_league_rounds = ["1: Assen", "2: COTA", "3: Nurburgring GP", "4: Imola", "5: Monaco", "6: Laguna Seca", "7: Red Bull Ring", "8: Suzuka"]
+    f4_track_maps = ["https://cdn.discordapp.com/attachments/764190503867908097/1211276753826226196/outline_cropped.png?ex=65ed9c62&is=65db2762&hm=e582fdc46246e30eecb2a7905bdb13ffb81de42fd16c34a9219aeaa20782310c&",
+                      "https://cdn.discordapp.com/attachments/764190503867908097/1211276949335572500/outline.png?ex=65ed9c91&is=65db2791&hm=683b8cf39b44ece737381184d251b37655e4e968008996fccd1e73b857222434&",
+                      "https://cdn.discordapp.com/attachments/764190503867908097/1211277322578300988/map.png?ex=65ed9cea&is=65db27ea&hm=3bb19e02d4370d066117a3b6e351ee43aae96aced008bc1a0e4c94cc0d5016bd&",
+                      "https://cdn.discordapp.com/attachments/764190503867908097/1211277417092751441/outline.png?ex=65ed9d00&is=65db2800&hm=9eec5c403063f6133cb1e3ccf9805c9f9ae2d7cc8568f90fdb3e8acecf36d3e2&",
+                      "https://cdn.discordapp.com/attachments/764190503867908097/1211277518137729044/map.png?ex=65ed9d18&is=65db2818&hm=a215fa73bcdfafaf60660714489513e7e4b6d3641fbdf87536530d77ec291a63&",
+                      "https://cdn.discordapp.com/attachments/764190503867908097/1211277546054750238/map.png?ex=65ed9d1f&is=65db281f&hm=f9d4b0f46c0119ed52c230e96315a66e04f7b9eca6bca40096acd2226b30b1bf&",
+                     "https://cdn.discordapp.com/attachments/764190503867908097/1211277584759791688/outline.png?ex=65ed9d28&is=65db2828&hm=c74a113c5bd4e5842d8d12547df5c3841d9c7641843e9af9baec8b69c78d480d&",
+                     "https://cdn.discordapp.com/attachments/764190503867908097/1211277624501084200/outline.png?ex=65ed9d32&is=65db2832&hm=c7bf94e41c28676a10a725be6e052b1b16534d6971b9ac4f3340810105de96ee&"]
 
     @has_permissions(administrator=True)
     @slash_command(name="attendance_embed", description="Sends the embed that people can acknowledge (or not) their attendance for the next round")
-    @discord.option("league_round", description="What round is coming up?", choices=gt4_league_rounds)
+    @discord.option("league_round", description="What round is coming up?", choices=f4_league_rounds)
     async def attendance_embed(self, ctx, league_round: str):
         if await src.cogs.commands.moderation.check_enabled(ctx) is True:
             await ctx.respond("Embed sent, you can hide this message.", ephemeral=True)
@@ -363,16 +365,16 @@ Livery: `{custom_livery}`
             AttendView.attend_embed_position = int(league_round[0]) - 1
 
             embed = discord.Embed(title=f"""
-XDE Porsche GT4 Challenge Round {league_round}""",
+XDE Formula 4 Round {league_round}""",
                                       description="[Live Timings](http://ac.xde.nl:8772/live-timing?server=1) | [Server Link](https://acstuff.ru/s/q:race/online/join?httpPort=9604&ip=89.117.56.93) | [Website](https://xde.nl/)",
                                       colour=Colours.standard)
 
             embed.set_image(
-                url=XDE.gt4_track_maps[position])
+                url=XDE.f4_track_maps[position])
 
             embed.add_field(name="", value=f"""**```ml
             ‎
-            PORSCHE GT4 CHALLENGE ROUND {league_round[0]}
+            FORMULA 4 ROUND {league_round[0]}
                     ```**""", inline=False)
 
             embed.add_field(name="", value="""```md
@@ -385,7 +387,7 @@ Not Turning Up:```""")
             embed.add_field(name="", value="Are you turning up?")
 
 
-            embed.set_footer(text=f"Xtreme Dutch Elite ・ 2023 | Created by Aston",
+            embed.set_footer(text=f"Xtreme Dutch Elite ・ 2024 | Created by Aston",
                                  icon_url='https://cdn.discordapp.com/attachments/940889123437309972/1168232344256258058/smaller_xde_logo.png?ex=65510427&is=653e8f27&hm=5f07726900ba157438dc6da3be2bcd10db6e5e3daa9825e4814dd75ff0fa677d&')
 
             AttendView.attend_embed_message = await ctx.send(embed=embed, view=AttendView())
