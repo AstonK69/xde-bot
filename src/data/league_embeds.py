@@ -190,28 +190,28 @@ f4_embed.add_field(name="Calendar", value="here are all the different tracks on 
                       inline=False)
 f4_embed.add_field(name="", value=""">>> **Round 1**
 Assen
-Laps: `TBA`""")
+Laps: 18""")
 f4_embed.add_field(name="", value=""">>> **Round 2**
 COTA
-Laps: `TBA`""")
+Laps: 14""")
 f4_embed.add_field(name="", value=""">>> **Round 3**
-Nurburgring GP
-Laps: `TBA`""")
+Nurburgring Sprint
+Laps: 20""")
 f4_embed.add_field(name="", value=""">>> **Round 4**
 Imola
-Laps: `TBA`""")
+Laps: 17""")
 f4_embed.add_field(name="", value=""">>> **Round 5**
 Monaco
-Laps: `TBA`""")
+Laps: 19""")
 f4_embed.add_field(name="", value=""">>> **Round 6**
 Laguna Seca
-Laps: `TBA`""")
+Laps: 21""")
 f4_embed.add_field(name="", value=""">>> **Round 7**
 Red Bull Ring
-Laps: `TBA`""")
+Laps: 19""")
 f4_embed.add_field(name="", value=""">>> **Round 8**
 Suzuka
-Laps: `TBA`""")
+Laps: 14""")
 
 f4_embed.add_field(name="Session Times", value="""The layout of the evening consists of a practice session which we dont require you to be there for, our briefing which we expect everyone to be in voice chat for, qualifying and the 2 races. The second race starting grid is the reverse of the finishing results of race one. Below is the times and length for all the sessions on the day:
 (Times are subject to change and may vary from weekend to weekend)""",

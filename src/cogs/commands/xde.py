@@ -342,10 +342,10 @@ Livery: `{custom_livery}`
                 except asyncio.TimeoutError as e:
                     await ctx.send("You ran out of time to respond")
 
-    f4_league_rounds = ["1: Assen", "2: COTA", "3: Nurburgring GP", "4: Imola", "5: Monaco", "6: Laguna Seca", "7: Red Bull Ring", "8: Suzuka"]
+    f4_league_rounds = ["1: Assen", "2: COTA", "3: Nurburgring Sprint", "4: Imola", "5: Monaco", "6: Laguna Seca", "7: Red Bull Ring", "8: Suzuka"]
     f4_track_maps = ["https://cdn.discordapp.com/attachments/764190503867908097/1211276753826226196/outline_cropped.png?ex=65ed9c62&is=65db2762&hm=e582fdc46246e30eecb2a7905bdb13ffb81de42fd16c34a9219aeaa20782310c&",
                       "https://cdn.discordapp.com/attachments/764190503867908097/1211276949335572500/outline.png?ex=65ed9c91&is=65db2791&hm=683b8cf39b44ece737381184d251b37655e4e968008996fccd1e73b857222434&",
-                      "https://cdn.discordapp.com/attachments/764190503867908097/1211277322578300988/map.png?ex=65ed9cea&is=65db27ea&hm=3bb19e02d4370d066117a3b6e351ee43aae96aced008bc1a0e4c94cc0d5016bd&",
+                      "https://cdn.discordapp.com/attachments/764190503867908097/1211359387688636496/map.png?ex=65ede957&is=65db7457&hm=f3e5e25410d1bbbd8e89194d8b16560eea02d30c25cfe9c30eddfae65eb9f49f&",
                       "https://cdn.discordapp.com/attachments/764190503867908097/1211277417092751441/outline.png?ex=65ed9d00&is=65db2800&hm=9eec5c403063f6133cb1e3ccf9805c9f9ae2d7cc8568f90fdb3e8acecf36d3e2&",
                       "https://cdn.discordapp.com/attachments/764190503867908097/1211277518137729044/map.png?ex=65ed9d18&is=65db2818&hm=a215fa73bcdfafaf60660714489513e7e4b6d3641fbdf87536530d77ec291a63&",
                       "https://cdn.discordapp.com/attachments/764190503867908097/1211277546054750238/map.png?ex=65ed9d1f&is=65db281f&hm=f9d4b0f46c0119ed52c230e96315a66e04f7b9eca6bca40096acd2226b30b1bf&",
